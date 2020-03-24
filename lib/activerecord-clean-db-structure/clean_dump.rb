@@ -40,7 +40,7 @@ module ActiveRecordCleanDbStructure
 
       if options[:remove_comments] == true
         # Remove comments
-        dump.gsub!(/^-- Name.+ Type: (COMMENT|EXTENSION|INDEX|TABLE|TYPE)$/, '')
+        dump.gsub!(/^-- Name.+ Type: (COMMENT|EXTENSION|INDEX|TABLE|TYPE|CONSTRAINT)$/, '')
       end
 
       unless options[:ignore_ids] == true
