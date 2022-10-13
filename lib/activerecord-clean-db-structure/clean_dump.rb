@@ -40,7 +40,7 @@ module ActiveRecordCleanDbStructure
 
       if options[:remove_comments] == true
         # Remove comments
-        dump.gsub!(/^-- Name.+ Type: (COMMENT|EXTENSION|INDEX|TABLE|TYPE|CONSTRAINT)$/, '')
+        dump.gsub!(/^-- Name.+ Type:.*/, '')
       end
 
       unless options[:ignore_ids] == true
@@ -133,11 +133,11 @@ module ActiveRecordCleanDbStructure
       if options[:fdw_to_local] == true
         ### NEED FOR TEST DATABASE `rails db:setup`
         # remove server and user for FDW
-        dump.gsub!(/^-- Name: [\w ]+; Type: SERVER.+?;/m, '')
-        dump.gsub!(/^-- Name: [\w ]+; Type: USER MAPPING.+?;/m, '')
+        dump.gsub!(/^CREATE SERVER \w+ FOREIGN DATA.+?;/m, '')
+        dump.gsub!(/^CREATE USER MAPPING FOR \w+ SERVER.+?;/m, '')
 
         # FDW table to native table
-        dump.gsub!(/^CREATE FOREIGN TABLE (.+?)\nSERVER.+?;/m, "CREATE TABLE \\1;")
+        dump.gsub!(/^CREATE FOREIGN TABLE (.+?)\nSERVER.+?;/m, "-- FOREIGN TABLE\nCREATE TABLE \\1;")
         ###
       end
 
