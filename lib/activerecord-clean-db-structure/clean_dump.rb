@@ -141,11 +141,21 @@ module ActiveRecordCleanDbStructure
         ###
       end
 
+      if options[:clean_timescale] == true
+        dump.gsub!(/CREATE TABLE _timescaledb_internal.*?;/m, '')
+        dump.gsub!(/ALTER TABLE ONLY _timescaledb_internal.*?;/m, '')
+        dump.gsub!(/CREATE TRIGGER ts_insert_blocker.*?;/m, '')
+      end
+
       # Reduce 2+ lines of whitespace to one line of whitespace
       dump.gsub!(/\n{2,}/m, "\n\n")
 
       if options[:order_column_definitions] == true
         dump.replace(order_column_definitions(dump))
+      end
+
+      if options[:prepend_specific_sql].present?
+        dump.insert(0, options[:prepend_specific_sql])
       end
 
       if options[:specific_sql].present?
