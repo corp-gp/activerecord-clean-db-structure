@@ -161,6 +161,12 @@ module ActiveRecordCleanDbStructure
       if options[:specific_sql].present?
         dump << options[:specific_sql]
       end
+
+      if options[:clean_specific_sql].present?
+        options[:clean_specific_sql].each do |sql|
+          dump.gsub!(sql, '')
+        end
+      end
     end
 
     def order_column_definitions(source)
